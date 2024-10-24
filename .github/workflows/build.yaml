@@ -42,7 +42,7 @@ jobs:
           uses: docker/build-push-action@v6
           with:
             push: true
-            context: ./backend/pinklifeline
+            context: .
             tags: sadatul/hackathon_gateway:${{ needs.test.outputs.version }}
             cache-from: type=gha
             cache-to: type=gha,mode=max
