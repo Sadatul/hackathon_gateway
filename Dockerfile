@@ -1,12 +1,33 @@
-FROM node:20.18.0-slim
+# Dockerfile for OTP service
+FROM node:18-alpine AS builder
 
-WORKDIR /usr/src/app
+WORKDIR /app
 
+# Copy package files
 COPY package*.json ./
+RUN npm install
 
-RUN npm ci && \
-    npm cache clean --force
-
+# Copy source code
 COPY . .
 
-CMD ["npm", "run", "start:dev"]
+# Build the application
+RUN npm run build
+
+# Production stage
+FROM node:18-alpine
+
+WORKDIR /app
+
+# Copy built assets and package files
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/package*.json ./
+
+# Install production dependencies only
+RUN npm install --only=production
+
+# Remove npm cache
+RUN npm cache clean --force
+
+EXPOSE 3000
+
+CMD ["npm", "run", "start:prod"]
