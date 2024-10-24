@@ -1,0 +1,26 @@
+name: Test and Build
+
+on:
+  pull_request:
+    branches:
+        - main
+  workflow_dispatch:
+
+jobs:
+    test:
+        runs-on: ubuntu-latest
+        steps:
+        - name: Checkout Repository code
+          uses: actions/checkout@v4
+        - uses: actions/setup-node@v4
+          with:
+            node-version: 18
+        - run: npm ci
+        - run: npm test
+        - name: Get version from package.json
+          id: get_version
+          run: |
+            VERSION=$(cat package.json | jq -r '.version')
+            echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+        - name: Echo Version
+          run: echo ${{ steps.get_version.outputs.VERSION }}
