@@ -1,0 +1,8 @@
+deployment:
+  name: hackathonpaymentservice
+  replicas: 1
+  image: sadatul/hackathon_payment_service
+  tag: <!IMAGE>
+  port: 3001
+  host: api.prod.pinklifeline.xyz
+  database: database-instance-prod
