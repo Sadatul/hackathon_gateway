@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { TrainQueryController } from './train_query.controller';
-import { TrainQueryService } from './train_query.service';
+import { PaymentController } from './payment.controller';
+import { PaymentService } from './payment.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 
@@ -9,12 +9,12 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
     ConfigModule.forRoot(),
     ClientsModule.registerAsync([
       {
-        name: 'TRAIN_QUERY_SERVICE',
+        name: 'PAYMENT_SERVICE',
         useFactory: (configService: ConfigService) => ({
           transport: Transport.RMQ,
           options: {
             urls: [configService.get<string>('RABBITMQ_URL')],
-            queue: 'hackathonQueue_train_queue',
+            queue: 'hackathonQueue_payment',
             queueOptions: {
               durable: true,
             },
@@ -29,7 +29,7 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
       },
     ]),
   ],
-  controllers: [TrainQueryController],
-  providers: [TrainQueryService]
+  controllers: [PaymentController],
+  providers: [PaymentService]
 })
-export class TrainQueryModule {}
+export class PaymentModule {}
